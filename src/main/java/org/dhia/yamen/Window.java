@@ -1,5 +1,6 @@
 package org.dhia.yamen;
 
+import org.dhia.util.Time;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
@@ -15,6 +16,23 @@ public class Window {
     public static Window window= null ;
     String title;
     private long glfwWindow;
+
+    public static Scene currentScene= null;
+
+    public static void changeScene(int newScene){
+        switch(newScene){
+            case 0:
+                currentScene = new LevelEditorScene();
+                //currentScene.init()
+                break;
+            case 1:
+                currentScene = new LevelScence();
+                break;
+            default:
+                assert false : "Unknown scene: " + newScene ;
+                break;
+        }
+    }
 
     private Window() {
         this.width = 1920;
@@ -95,18 +113,31 @@ public class Window {
     }
 
     public void loop() {
+        float beginTime = Time.getTime();
+        float endTime = Time.getTime();
+
         while (!glfwWindowShouldClose(glfwWindow)) {
             //poll events
             glfwPollEvents();
+
+
 
             glClearColor(1.0f,  1.0f, 1.0f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT);
 
             if(KeyListener.isKeyPressed(GLFW_KEY_SPACE)) {
                 System.out.println("SPACE is pressed");
+
             }
 
             glfwSwapBuffers(glfwWindow);
+
+            endTime = Time.getTime();
+            float dt = endTime - beginTime;
+            beginTime = endTime;
+
+
+
         }
     }
 }
